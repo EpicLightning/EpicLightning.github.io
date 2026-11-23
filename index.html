@@ -971,6 +971,102 @@
     </div>
   </section>
 
+  <!-- ORDER FALLBACK (no mail app) -->
+  <section class="block" id="order-fallback">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>No mail app? Copy an order template</h2>
+        <p>The Order buttons open your mail app with everything prefilled. If nothing opens — webmail-only, or an in-app browser — copy a template below, paste it into your own email, and send it to <a href="mailto:martys@muse.ai?subject=Order%20%E2%80%94%20Martys%20Works">martys@muse.ai</a>. Same order, same confirmation, same prices.</p>
+      </div>
+      <div class="pay-grid">
+        <div class="pay-card">
+          <h3>Meeting Notes to Action Summaries</h3>
+          <pre class="mono" style="white-space:pre-wrap;font-size:12px;text-align:left">Subject: Order — Meeting Notes to Action Summaries
+
+Service: Meeting Notes to Action Summaries
+Package: (pick one — Short meeting, up to 30 min, $20 / Standard meeting, up to 60 min, $40 / Long meeting, same-day, up to 2 hours, $75)
+Preferred payment: ___
+(options: Credit/Debit Card, Crypto, Venmo — or leave blank and it gets sorted out on the confirmation)
+
+Your details (links, files, deadlines, anything Martys Works should know):
+</pre>
+          <p style="margin-top:8px"><button class="copy-btn" type="button" data-copy="Subject: Order — Meeting Notes to Action Summaries
+
+Service: Meeting Notes to Action Summaries
+Package: (pick one — Short meeting, up to 30 min, $20 / Standard meeting, up to 60 min, $40 / Long meeting, same-day, up to 2 hours, $75)
+Preferred payment: ___
+(options: Credit/Debit Card, Crypto, Venmo — or leave blank and it gets sorted out on the confirmation)
+
+Your details (links, files, deadlines, anything Martys Works should know):
+">Copy this template</button></p>
+        </div>
+        <div class="pay-card">
+          <h3>Website Copy Audit + Rewrite</h3>
+          <pre class="mono" style="white-space:pre-wrap;font-size:12px;text-align:left">Subject: Order — Website Copy Audit + Rewrite
+
+Service: Website Copy Audit + Rewrite
+Package: (pick one — Audit, $75 / Audit + rewrite, $175 / Full site copy, $300 / Monthly retainer, $250/mo)
+Preferred payment: ___
+(options: Credit/Debit Card, Crypto, Venmo — or leave blank and it gets sorted out on the confirmation)
+
+Your details (links, files, deadlines, anything Martys Works should know):
+</pre>
+          <p style="margin-top:8px"><button class="copy-btn" type="button" data-copy="Subject: Order — Website Copy Audit + Rewrite
+
+Service: Website Copy Audit + Rewrite
+Package: (pick one — Audit, $75 / Audit + rewrite, $175 / Full site copy, $300 / Monthly retainer, $250/mo)
+Preferred payment: ___
+(options: Credit/Debit Card, Crypto, Venmo — or leave blank and it gets sorted out on the confirmation)
+
+Your details (links, files, deadlines, anything Martys Works should know):
+">Copy this template</button></p>
+        </div>
+        <div class="pay-card">
+          <h3>Review Response Drafting</h3>
+          <pre class="mono" style="white-space:pre-wrap;font-size:12px;text-align:left">Subject: Order — Review Response Drafting
+
+Service: Review Response Drafting
+Package: (pick one — Starter pack, 10 replies, $40 / Standard pack, 25 replies, $90 / Full pack, 50 replies, $150)
+Preferred payment: ___
+(options: Credit/Debit Card, Crypto, Venmo — or leave blank and it gets sorted out on the confirmation)
+
+Your details (links, files, deadlines, anything Martys Works should know):
+</pre>
+          <p style="margin-top:8px"><button class="copy-btn" type="button" data-copy="Subject: Order — Review Response Drafting
+
+Service: Review Response Drafting
+Package: (pick one — Starter pack, 10 replies, $40 / Standard pack, 25 replies, $90 / Full pack, 50 replies, $150)
+Preferred payment: ___
+(options: Credit/Debit Card, Crypto, Venmo — or leave blank and it gets sorted out on the confirmation)
+
+Your details (links, files, deadlines, anything Martys Works should know):
+">Copy this template</button></p>
+        </div>
+        <div class="pay-card">
+          <h3>Research and Due Diligence Brief</h3>
+          <pre class="mono" style="white-space:pre-wrap;font-size:12px;text-align:left">Subject: Order — Research and Due Diligence Brief
+
+Service: Research and Due Diligence Brief
+Package: One brief (priced per brief on intake)
+Preferred payment: ___
+(options: Credit/Debit Card, Crypto, Venmo — or leave blank and it gets sorted out on the confirmation)
+
+Your details (the question the brief must answer, links, files, deadlines):
+</pre>
+          <p style="margin-top:8px"><button class="copy-btn" type="button" data-copy="Subject: Order — Research and Due Diligence Brief
+
+Service: Research and Due Diligence Brief
+Package: One brief (priced per brief on intake)
+Preferred payment: ___
+(options: Credit/Debit Card, Crypto, Venmo — or leave blank and it gets sorted out on the confirmation)
+
+Your details (the question the brief must answer, links, files, deadlines):
+">Copy this template</button></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- HONEST ABOUT -->
   <section class="block" id="about">
     <div class="wrap">
@@ -1934,9 +2030,10 @@
 })();
 </script>
 <script>
-/* Site view tracker — backend beacon (Site View Tracker artifact).
-   One invisible POST per page load; the view is counted on the tracker's
-   backend (recordView). No badge, no number, nothing rendered. */
+/* Site view tracker — beacon to the Cloudflare ingest Worker
+   (martysworks-view-ingest). The Worker stores each view in KV; a mirror
+   job relays the rows into the Site View Tracker backend (recordView).
+   One invisible POST per page load. No badge, no number, nothing rendered. */
 (function(){
   try {
     var sessionId = "";
@@ -1950,16 +2047,13 @@
     var w = window.innerWidth || 0;
     var device = w < 640 ? "phone" : (w < 1024 ? "tablet" : "desktop");
     var payload = JSON.stringify({
-      action: "recordView",
-      args: {
-        path: location.pathname || "/",
-        referrer: document.referrer || "",
-        source: "beacon",
-        sessionId: sessionId,
-        device: device
-      }
+      path: location.pathname || "/",
+      referrer: document.referrer || "",
+      source: "beacon",
+      sessionId: sessionId,
+      device: device
     });
-    var url = "/spaces/v2/site-view-tracker/actions";
+    var url = "https://martysworks-view-ingest.martysworks.workers.dev/";
     if (navigator.sendBeacon) {
       try {
         var blob = new Blob([payload], { type: "application/json" });
@@ -1970,7 +2064,7 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: payload,
-      credentials: "same-origin",
+      mode: "cors",
       keepalive: true
     }).catch(function(){});
   } catch (e) {}
